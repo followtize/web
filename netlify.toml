@@ -1,0 +1,12 @@
+[build]
+  command = "pnpm --filter @workspace/followtize run build"
+  publish = "artifacts/followtize/dist/public"
+
+[build.environment]
+  NODE_VERSION = "24"
+  PNPM_VERSION = "10"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
