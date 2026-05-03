@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Followtize"
+version = "1.0.0"
+id = "artifacts/followtize"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24129
+
+[services.development]
+run = "pnpm --filter @workspace/followtize run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/followtize", "run", "build" ]
+publicDir = "artifacts/followtize/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24129"
+BASE_PATH = "/"
