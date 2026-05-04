@@ -167,8 +167,8 @@
 
 /* ── Hero section animations ── */
 @keyframes hero-ring-expand {
-  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.55; }
-  100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+  0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(5.5); opacity: 0; }
 }
 @keyframes hero-grid-scroll {
   0%   { background-position: 0px 0px, 0px 0px; }
