@@ -5,7 +5,7 @@ export function Problem() {
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -19,7 +19,7 @@ export function Problem() {
               <p className="text-muted-foreground">You built a great product, but acquiring users is expensive. Ads are saturated, and traditional marketing channels are exhausted.</p>
             </div>
             <div className="p-8 rounded-2xl bg-card border border-border">
-              <h3 className="text-xl font-semibold mb-4 text-blue-500">For Creators</h3>
+              <h3 className="text-xl font-semibold mb-4" style={{ color: "#f59e0b" }}>For Creators</h3>
               <p className="text-muted-foreground">You have attention, but you are trading it for one-off sponsorships. You want to build wealth by owning a piece of the next big thing.</p>
             </div>
           </div>

@@ -1,297 +1,301 @@
-import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import {
+  Rocket,
+  TrendingUp,
+  Code2,
+  Package,
+  PieChart,
+  Users,
+  ShieldCheck,
+  Handshake,
+  Target,
+  Users2,
+} from "lucide-react";
 
-interface Node {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  type: "startup" | "creator";
-  radius: number;
-  pulsePhase: number;
-  pulseSpeed: number;
-  connections: number[];
-}
+const leftIcons = [Rocket, TrendingUp, Code2, Package, PieChart];
+
+const rightCreators = [
+  { count: "125K", img: "/influencer-1.png" },
+  { count: "250K", img: "/influencer-2.png" },
+  { count: "80K",  img: "/influencer-3.png" },
+  { count: "160K", img: "/influencer-4.png" },
+  { count: "300K", img: "/influencer-5.png" },
+];
+
+const features = [
+  { Icon: ShieldCheck, title: "Aligned Incentives",     desc: "Creators earn when startups grow." },
+  { Icon: Handshake,   title: "Long-term Partnerships", desc: "Equity or revenue share instead of one-time deals." },
+  { Icon: Target,      title: "Better Growth",          desc: "Startups get distribution from trusted voices." },
+  { Icon: Users2,      title: "Built for Both",         desc: "Powering growth for startups and creators." },
+];
+
+// viewBox 0 0 500 440
+// Left node centers  (w-14=56px, gap-4=16px): x=28, y = 76 148 220 292 364
+// Circle center (250,220), r=72 → left edge 178, right edge 322
+// Right node centers (w-10=40px img, py-2): x=468, y = 84 152 220 288 356
+
+const leftPaths = [
+  "M 28 76  C 96 76  156 220 178 220",
+  "M 28 148 C 96 148 156 220 178 220",
+  "M 28 220 C 96 220 156 220 178 220",
+  "M 28 292 C 96 292 156 220 178 220",
+  "M 28 364 C 96 364 156 220 178 220",
+];
+
+const rightPaths = [
+  "M 322 220 C 344 220 402 84  468 84",
+  "M 322 220 C 344 220 402 152 468 152",
+  "M 322 220 C 344 220 402 220 468 220",
+  "M 322 220 C 344 220 402 288 468 288",
+  "M 322 220 C 344 220 402 356 468 356",
+];
+
+const GOLD = "#d8a516";
 
 export function Hero() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationId: number;
-    const nodes: Node[] = [];
-    const NODE_COUNT = 40;
-    const CONNECTION_DIST = 160;
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    };
-
-    const buildNodes = () => {
-      nodes.length = 0;
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-      for (let i = 0; i < NODE_COUNT; i++) {
-        nodes.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          type: i < NODE_COUNT / 2 ? "startup" : "creator",
-          radius: 3 + Math.random() * 3,
-          pulsePhase: Math.random() * Math.PI * 2,
-          pulseSpeed: 0.02 + Math.random() * 0.02,
-          connections: [],
-        });
-      }
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
-    };
-
-    window.addEventListener("resize", () => { resize(); buildNodes(); });
-    canvas.addEventListener("mousemove", onMouseMove);
-    resize();
-    buildNodes();
-
-    const animate = () => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-
-      ctx.clearRect(0, 0, w, h);
-
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-
-      for (const node of nodes) {
-        node.x += node.vx;
-        node.y += node.vy;
-        if (node.x < 0 || node.x > w) node.vx *= -1;
-        if (node.y < 0 || node.y > h) node.vy *= -1;
-        node.pulsePhase += node.pulseSpeed;
-
-        const dx = node.x - mx;
-        const dy = node.y - my;
-        const distToMouse = Math.sqrt(dx * dx + dy * dy);
-        if (distToMouse < 120) {
-          const force = (120 - distToMouse) / 120 * 0.6;
-          node.vx += (dx / distToMouse) * force * 0.05;
-          node.vy += (dy / distToMouse) * force * 0.05;
-        }
-        node.vx *= 0.995;
-        node.vy *= 0.995;
-      }
-
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i];
-          const b = nodes[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < CONNECTION_DIST) {
-            const alpha = (1 - dist / CONNECTION_DIST) * 0.35;
-            const isCross = a.type !== b.type;
-
-            if (isCross) {
-              const grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-              grad.addColorStop(0, `rgba(124, 58, 237, ${alpha})`);
-              grad.addColorStop(1, `rgba(37, 99, 235, ${alpha})`);
-              ctx.strokeStyle = grad;
-              ctx.lineWidth = 1.2;
-            } else {
-              ctx.strokeStyle = `rgba(100, 100, 140, ${alpha * 0.5})`;
-              ctx.lineWidth = 0.6;
-            }
-
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      for (const node of nodes) {
-        const pulse = Math.sin(node.pulsePhase) * 0.5 + 0.5;
-        const glowRadius = node.radius * (2.5 + pulse * 1.5);
-
-        const isStartup = node.type === "startup";
-        const color = isStartup ? "124, 58, 237" : "37, 99, 235";
-
-        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowRadius);
-        glow.addColorStop(0, `rgba(${color}, ${0.3 + pulse * 0.2})`);
-        glow.addColorStop(1, `rgba(${color}, 0)`);
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, glowRadius, 0, Math.PI * 2);
-        ctx.fillStyle = glow;
-        ctx.fill();
-
-        const coreGrad = ctx.createRadialGradient(
-          node.x - node.radius * 0.3,
-          node.y - node.radius * 0.3,
-          0,
-          node.x,
-          node.y,
-          node.radius
-        );
-        if (isStartup) {
-          coreGrad.addColorStop(0, `rgba(167, 139, 250, ${0.9 + pulse * 0.1})`);
-          coreGrad.addColorStop(1, `rgba(124, 58, 237, ${0.8 + pulse * 0.1})`);
-        } else {
-          coreGrad.addColorStop(0, `rgba(96, 165, 250, ${0.9 + pulse * 0.1})`);
-          coreGrad.addColorStop(1, `rgba(37, 99, 235, ${0.8 + pulse * 0.1})`);
-        }
-
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = coreGrad;
-        ctx.fill();
-      }
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", () => { resize(); buildNodes(); });
-      canvas.removeEventListener("mousemove", onMouseMove);
-    };
-  }, []);
-
   const scrollToWaitlist = () => {
     document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-background">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full z-0 pointer-events-none"
-        style={{ opacity: 0.55 }}
-        aria-hidden="true"
-      />
+    <section className="relative w-full min-h-screen bg-background text-foreground overflow-hidden flex flex-col">
 
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px]" />
-        <div className="absolute top-1/3 left-1/3 w-[300px] h-[300px] rounded-full bg-blue-600/5 blur-[80px]" />
+      {/* ── Hero animated background ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        {/* Scrolling gold grid */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: [
+              "linear-gradient(rgba(216,165,22,0.045) 1px, transparent 1px)",
+              "linear-gradient(90deg, rgba(216,165,22,0.045) 1px, transparent 1px)",
+            ].join(", "),
+            backgroundSize: "80px 80px, 80px 80px",
+            animation: "hero-grid-scroll 18s linear infinite",
+          }}
+        />
+
+        {/* Expanding ripple rings — centered on network visual (right column) */}
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: "380px",
+              height: "380px",
+              top: "50%",
+              left: "65%",
+              border: "1px solid rgba(216,165,22,0.28)",
+              animation: "hero-ring-expand 7s linear infinite",
+              animationDelay: `${i * 1.4}s`,
+            }}
+          />
+        ))}
+
+        {/* Warm glow — right (network area) */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: "560px",
+            height: "560px",
+            top: "50%",
+            left: "65%",
+            background: "radial-gradient(circle, rgba(216,165,22,0.12) 0%, transparent 70%)",
+            animation: "hero-glow-breathe 6s ease-in-out infinite",
+          }}
+        />
+
+        {/* Warm glow — left (copy area) */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: "420px",
+            height: "420px",
+            top: "45%",
+            left: "22%",
+            background: "radial-gradient(circle, rgba(216,165,22,0.06) 0%, transparent 70%)",
+            animation: "hero-glow-breathe 9s ease-in-out infinite",
+            animationDelay: "3s",
+          }}
+        />
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 text-center max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/25 text-primary text-sm font-medium mb-10"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-          </span>
-          Now accepting early signups
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.05] mb-8"
-        >
-          <span className="text-foreground">Creators Get Equity.</span>
-          <br />
-          <span className="bg-gradient-to-br from-violet-400 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-            Startups Get Distribution.
-          </span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, delay: 0.2 }}
-          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
-        >
-          Followtize connects founders with creators who promote products in exchange for equity or revenue share. Turn attention into ownership.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <Button
-            size="lg"
-            onClick={scrollToWaitlist}
-            className="w-full sm:w-auto text-base px-8 py-6 rounded-full font-semibold shadow-[0_0_40px_-8px_rgba(124,58,237,0.6)] hover:shadow-[0_0_60px_-8px_rgba(124,58,237,0.8)] transition-all duration-300"
-            data-testid="button-join-waitlist"
-          >
-            Join Waitlist
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={scrollToWaitlist}
-            className="w-full sm:w-auto text-base px-8 py-6 rounded-full border-border/50 bg-background/50 backdrop-blur-sm hover:bg-muted/30 font-medium"
-            data-testid="button-im-a-founder"
-          >
-            I'm a Founder
-          </Button>
-          <Button
-            size="lg"
-            variant="ghost"
-            onClick={scrollToWaitlist}
-            className="w-full sm:w-auto text-base px-8 py-6 rounded-full hover:bg-muted/30 font-medium text-muted-foreground hover:text-foreground"
-            data-testid="button-im-a-creator"
-          >
-            I'm a Creator
-          </Button>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-16 flex items-center justify-center gap-8 text-sm text-muted-foreground"
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-violet-500" />
-            <span>Startups</span>
-          </div>
-          <div className="w-px h-4 bg-border" />
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-blue-500" />
-            <span>Creators</span>
-          </div>
-          <div className="w-px h-4 bg-border" />
-          <span>Connected by equity</span>
-        </motion.div>
+      {/* Nav logo */}
+      <div className="absolute top-6 left-8 z-20">
+        <img src="/logo.png" alt="Followtize" className="h-10 w-auto" />
       </div>
 
+      {/* ── Main two-column grid ── */}
+      <div className="flex-1 flex items-center">
+        <div className="max-w-6xl w-full mx-auto grid md:grid-cols-2 gap-12 items-center pt-24 pb-6 px-6">
+
+          {/* Left — copy */}
+          <motion.div initial={{ opacity: 0, x: -24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
+            <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+              <span className="block text-foreground">Turn Attention</span>
+              <span className="block bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                Into Ownership
+              </span>
+            </h1>
+
+            <p className="text-muted-foreground mt-6 max-w-md leading-relaxed">
+              Followtize connects startups with creators. Creators promote products they
+              believe in and get equity or revenue share in return.
+            </p>
+
+            <div className="flex flex-wrap gap-4 mt-8">
+              <Button
+                size="lg"
+                onClick={scrollToWaitlist}
+                className="rounded-xl font-semibold px-7 shadow-[0_0_32px_-6px_rgba(216,165,22,0.65)] hover:shadow-[0_0_48px_-6px_rgba(216,165,22,0.85)] transition-all duration-300"
+                data-testid="button-join-waitlist"
+              >
+                Join Waitlist →
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={scrollToWaitlist}
+                className="rounded-xl px-7 border-yellow-600/70 text-yellow-500 hover:bg-yellow-600 hover:text-black hover:border-yellow-600 transition-all duration-300"
+                data-testid="button-im-a-founder"
+              >
+                I'm a Founder
+              </Button>
+            </div>
+
+            <div className="flex items-center mt-8 gap-4">
+              <div className="flex -space-x-3">
+                {["/influencer-1.png", "/influencer-3.png", "/influencer-4.png", "/influencer-2.png"].map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt=""
+                    className="w-10 h-10 rounded-full object-cover border-2 border-background"
+                  />
+                ))}
+              </div>
+              <p className="text-muted-foreground text-sm">
+                Be early. Join the future of creator partnerships.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Right — network visual */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="relative flex items-center justify-center h-[440px]"
+          >
+            {/* ── Curved glowy connecting lines ── */}
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              viewBox="0 0 500 440"
+              preserveAspectRatio="xMidYMid meet"
+              fill="none"
+            >
+              <defs>
+                <filter id="lineGlow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Outer glow pass */}
+              {[...leftPaths, ...rightPaths].map((d, i) => (
+                <path
+                  key={`glow${i}`}
+                  d={d}
+                  stroke={GOLD}
+                  strokeWidth="6"
+                  strokeOpacity="0.14"
+                  filter="url(#lineGlow)"
+                />
+              ))}
+              {/* Crisp core line */}
+              {[...leftPaths, ...rightPaths].map((d, i) => (
+                <path
+                  key={`line${i}`}
+                  d={d}
+                  stroke={GOLD}
+                  strokeWidth="1.8"
+                  strokeOpacity="0.65"
+                />
+              ))}
+            </svg>
+
+            {/* Ambient glow blob */}
+            <div className="absolute w-48 h-48 rounded-full bg-yellow-500 opacity-[0.16] blur-3xl" />
+
+            {/* ── Center circle (smaller) ── */}
+            <div className="relative z-10 w-36 h-36 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex flex-col items-center justify-center shadow-[0_0_50px_rgba(245,185,66,0.55),0_0_100px_rgba(245,185,66,0.25),0_0_160px_rgba(245,185,66,0.1)]">
+              <img
+                src="/followtize-icon-logo.png"
+                alt="Followtize icon"
+                className="w-12 h-12 object-contain"
+              />
+              <span className="mt-1 text-[11px] font-bold text-black/80 tracking-wide">Followtize</span>
+            </div>
+
+            {/* ── Left icon nodes ── */}
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col gap-4">
+              {leftIcons.map((Icon, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.55 + i * 0.07 }}
+                  className="w-14 h-14 rounded-full border border-yellow-500/55 flex items-center justify-center bg-background/75 backdrop-blur-sm shadow-[0_0_18px_rgba(216,165,22,0.18)]"
+                >
+                  <Icon className="w-6 h-6 text-yellow-400" strokeWidth={1.5} />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* ── Right creator nodes ── */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col gap-3">
+              {rightCreators.map(({ count, img }, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: 14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.55 + i * 0.07 }}
+                  className="flex items-center gap-2.5 bg-background/75 border border-yellow-600/40 px-3 py-2 rounded-full backdrop-blur-sm shadow-[0_0_14px_rgba(216,165,22,0.12)]"
+                >
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-1 ring-yellow-500/50"
+                  />
+                  <div className="flex items-center gap-1 pr-1">
+                    <Users className="w-3.5 h-3.5 text-yellow-400" strokeWidth={1.5} />
+                    <span className="text-yellow-400 text-sm font-semibold">{count}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ── Bottom feature strip ── */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.5 }}
+        className="max-w-6xl w-full mx-auto px-6 mb-10 grid grid-cols-2 md:grid-cols-4 gap-6 border border-yellow-900/50 rounded-xl p-6 bg-card/30 backdrop-blur-sm"
       >
-        <span className="text-xs uppercase tracking-widest font-medium">Scroll</span>
-        <div className="w-px h-10 bg-gradient-to-b from-muted-foreground/50 to-transparent" />
+        {features.map(({ Icon, title, desc }, i) => (
+          <div key={i} className="flex flex-col gap-2">
+            <Icon className="w-5 h-5 text-yellow-400 mb-0.5" strokeWidth={1.5} />
+            <div className="text-yellow-400 font-semibold text-sm">{title}</div>
+            <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
+          </div>
+        ))}
       </motion.div>
     </section>
   );

@@ -1,15 +1,17 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+const SECONDARY = "#f59e0b";
+
 const startups = [
-  { name: "AeroFinance", category: "Fintech", offer: "0.5% equity", audience: "Fintech, 50K+" },
-  { name: "Lumina AI", category: "AI Tool", offer: "20% rev share", audience: "Tech, 100K+" },
-  { name: "Orbit Social", category: "Social App", offer: "1% equity", audience: "Lifestyle, 500K+" },
+  { name: "AeroFinance", category: "Fintech",     offer: "0.5% equity",  audience: "Fintech, 50K+" },
+  { name: "Lumina AI",   category: "AI Tool",     offer: "20% rev share", audience: "Tech, 100K+" },
+  { name: "Orbit Social",category: "Social App",  offer: "1% equity",    audience: "Lifestyle, 500K+" },
 ];
 
 const creators = [
-  { name: "Alex Tech", niche: "AI & Dev", followers: "120K", engagement: "8.5%" },
-  { name: "Sarah Invests", niche: "Personal Finance", followers: "340K", engagement: "6.2%" },
+  { name: "Alex Tech",     niche: "AI & Dev",          followers: "120K", engagement: "8.5%" },
+  { name: "Sarah Invests", niche: "Personal Finance",   followers: "340K", engagement: "6.2%" },
 ];
 
 export function Preview() {
@@ -17,7 +19,7 @@ export function Preview() {
     <section className="py-24 bg-background relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
       <div className="container mx-auto px-4 relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -31,7 +33,7 @@ export function Preview() {
           <div className="space-y-6">
             <h3 className="text-2xl font-bold px-2">Top Opportunities</h3>
             {startups.map((s, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -55,22 +57,32 @@ export function Preview() {
               </motion.div>
             ))}
           </div>
-          
+
           <div className="space-y-6 mt-12 lg:mt-0">
             <h3 className="text-2xl font-bold px-2">Featured Creators</h3>
             {creators.map((c, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-6 rounded-2xl bg-card/80 backdrop-blur-xl border border-border/50 hover:border-blue-500/50 transition-colors group cursor-pointer"
+                className="p-6 rounded-2xl bg-card/80 backdrop-blur-xl border border-border/50 transition-colors group cursor-pointer"
+                style={{ ["--tw-border-opacity" as string]: "1" }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = SECONDARY)}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = "")}
                 data-testid={`card-creator-${i}`}
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h4 className="text-xl font-bold group-hover:text-blue-500 transition-colors">{c.name}</h4>
+                    <h4
+                      className="text-xl font-bold transition-colors"
+                      style={{ color: "inherit" }}
+                      onMouseEnter={e => (e.currentTarget.style.color = SECONDARY)}
+                      onMouseLeave={e => (e.currentTarget.style.color = "")}
+                    >
+                      {c.name}
+                    </h4>
                     <span className="text-sm text-muted-foreground">{c.niche}</span>
                   </div>
                 </div>

@@ -58,49 +58,53 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  --background: 240 10% 4%;
-  --foreground: 0 0% 98%;
-  --border: 240 10% 15%;
-  
-  --card: 240 10% 8%;
-  --card-foreground: 0 0% 98%;
-  --card-border: 240 10% 15%;
+  /* #0d0b07 — very dark warm background */
+  --background: 40 30% 4%;
+  --foreground: 40 15% 95%;
+  --border: 40 12% 16%;
 
-  --sidebar: 240 10% 8%;
-  --sidebar-foreground: 0 0% 98%;
-  --sidebar-border: 240 10% 15%;
-  --sidebar-primary: 263 70% 50%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 10% 12%;
-  --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-ring: 263 70% 50%;
+  --card: 40 20% 8%;
+  --card-foreground: 40 15% 95%;
+  --card-border: 40 12% 16%;
 
-  --popover: 240 10% 8%;
-  --popover-foreground: 0 0% 98%;
-  --popover-border: 240 10% 15%;
+  --sidebar: 40 20% 8%;
+  --sidebar-foreground: 40 15% 95%;
+  --sidebar-border: 40 12% 16%;
+  /* primary gold */
+  --sidebar-primary: 44 82% 47%;
+  --sidebar-primary-foreground: 43 70% 10%;
+  --sidebar-accent: 40 15% 12%;
+  --sidebar-accent-foreground: 40 15% 95%;
+  --sidebar-ring: 44 82% 47%;
 
-  --primary: 263 70% 50%;
-  --primary-foreground: 0 0% 98%;
+  --popover: 40 20% 8%;
+  --popover-foreground: 40 15% 95%;
+  --popover-border: 40 12% 16%;
 
-  --secondary: 240 10% 12%;
-  --secondary-foreground: 0 0% 98%;
+  /* #d8a516 — primary gold */
+  --primary: 44 82% 47%;
+  --primary-foreground: 43 70% 10%;
 
-  --muted: 240 10% 12%;
-  --muted-foreground: 240 5% 65%;
+  --secondary: 40 12% 13%;
+  --secondary-foreground: 40 15% 95%;
 
-  --accent: 221 83% 53%;
-  --accent-foreground: 0 0% 98%;
+  --muted: 40 12% 13%;
+  --muted-foreground: 40 8% 58%;
+
+  /* #544216 — dark brown accent */
+  --accent: 43 58% 21%;
+  --accent-foreground: 40 15% 95%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
 
-  --input: 240 10% 15%;
-  --ring: 263 70% 50%;
-  
+  --input: 40 12% 16%;
+  --ring: 44 82% 47%;
+
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
-  --radius: .5rem; 
+  --radius: .5rem;
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -116,49 +120,84 @@
 .dark {
   --button-outline: rgba(255,255,255, .10);
   --badge-outline: rgba(255,255,255, .05);
-  --opaque-button-border-intensity: 9; 
+  --opaque-button-border-intensity: 9;
 
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 240 10% 4%;
-  --foreground: 0 0% 98%;
-  --border: 240 10% 15%;
-  
-  --card: 240 10% 8%;
-  --card-foreground: 0 0% 98%;
-  --card-border: 240 10% 15%;
+  --background: 40 30% 4%;
+  --foreground: 40 15% 95%;
+  --border: 40 12% 16%;
 
-  --sidebar: 240 10% 8%;
-  --sidebar-foreground: 0 0% 98%;
-  --sidebar-border: 240 10% 15%;
-  --sidebar-primary: 263 70% 50%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 10% 12%;
-  --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-ring: 263 70% 50%;
+  --card: 40 20% 8%;
+  --card-foreground: 40 15% 95%;
+  --card-border: 40 12% 16%;
 
-  --popover: 240 10% 8%;
-  --popover-foreground: 0 0% 98%;
-  --popover-border: 240 10% 15%;
+  --sidebar: 40 20% 8%;
+  --sidebar-foreground: 40 15% 95%;
+  --sidebar-border: 40 12% 16%;
+  --sidebar-primary: 44 82% 47%;
+  --sidebar-primary-foreground: 43 70% 10%;
+  --sidebar-accent: 40 15% 12%;
+  --sidebar-accent-foreground: 40 15% 95%;
+  --sidebar-ring: 44 82% 47%;
 
-  --primary: 263 70% 50%;
-  --primary-foreground: 0 0% 98%;
+  --popover: 40 20% 8%;
+  --popover-foreground: 40 15% 95%;
+  --popover-border: 40 12% 16%;
 
-  --secondary: 240 10% 12%;
-  --secondary-foreground: 0 0% 98%;
+  --primary: 44 82% 47%;
+  --primary-foreground: 43 70% 10%;
 
-  --muted: 240 10% 12%;
-  --muted-foreground: 240 5% 65%;
+  --secondary: 40 12% 13%;
+  --secondary-foreground: 40 15% 95%;
 
-  --accent: 221 83% 53%;
-  --accent-foreground: 0 0% 98%;
+  --muted: 40 12% 13%;
+  --muted-foreground: 40 8% 58%;
+
+  --accent: 43 58% 21%;
+  --accent-foreground: 40 15% 95%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
 
-  --input: 240 10% 15%;
-  --ring: 263 70% 50%;
+  --input: 40 12% 16%;
+  --ring: 44 82% 47%;
+}
+
+/* ── Hero section animations ── */
+@keyframes hero-ring-expand {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.55; }
+  100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+}
+@keyframes hero-grid-scroll {
+  0%   { background-position: 0px 0px, 0px 0px; }
+  100% { background-position: 80px 80px, 80px 80px; }
+}
+@keyframes hero-glow-breathe {
+  0%,  100% { opacity: 0.10; transform: translate(-50%, -50%) scale(1);    }
+  50%        { opacity: 0.18; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+/* ── Animated background orbs ── */
+@keyframes bg-float-1 {
+  0%,  100% { transform: translate(0px,   0px)   scale(1);    opacity: 0.09; }
+  25%        { transform: translate(70px,  -90px) scale(1.08); opacity: 0.12; }
+  60%        { transform: translate(-50px, 60px)  scale(0.94); opacity: 0.07; }
+}
+@keyframes bg-float-2 {
+  0%,  100% { transform: translate(0px,   0px)  scale(1);    opacity: 0.07; }
+  35%        { transform: translate(-90px, 70px) scale(1.06); opacity: 0.10; }
+  70%        { transform: translate(60px, -60px) scale(0.92); opacity: 0.06; }
+}
+@keyframes bg-float-3 {
+  0%,  100% { transform: translate(0px,  0px);   opacity: 0.05; }
+  50%        { transform: translate(80px, 90px);  opacity: 0.09; }
+}
+/* Slowly drifting dot grid */
+@keyframes dot-drift {
+  0%   { background-position: 0px 0px; }
+  100% { background-position: 56px 56px; }
 }
 
 @layer base {
